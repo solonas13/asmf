@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     		return 0;
   	}
 
-  	/* Open a file for reading */
+  	/* Open a file for reading: the text*/
   	if(strcmp(argv[1], "-") != 0) {
 	#if defined(_MSC_VER) && _MSC_VER >= 1400
     	if(fopen_s(&fp, fname = argv[1], "rb") != 0) 
@@ -108,6 +108,7 @@ int main(int argc, char **argv)
   	}
   	if(needclose & 1) { fclose(fp); }
 
+  	/* Open a file for reading: the pattern*/
   	if(strcmp(argv[2], "-") != 0) {
 	#if defined(_MSC_VER) && _MSC_VER >= 1400
     	if(fopen_s(&fp, fname = argv[2], "rb") != 0) 
