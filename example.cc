@@ -205,6 +205,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{	
+		#if 0
 		start = gettime();
 		if ( ! ( acsmf_simple ( x, t, k, &Occ, &num_of_occ ) ) )
 		{
@@ -212,8 +213,9 @@ int main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 		end = gettime();
-
 		fprintf( stderr, "Elapsed time of acsmf_simple: %lf\n", ( end - start ));
+		#endif
+
 		start = gettime();
 		if ( ! ( acsmf ( x, t, k, &Occ, &num_of_occ ) ) )
 		{
@@ -224,9 +226,9 @@ int main(int argc, char **argv)
 
 		fprintf( stderr, "Elapsed time of acsmf: %lf\n", ( end - start ));
 
-		//fprintf( stderr, "Occ: %d\n", num_of_occ );
-		//for ( int i = 0; i < num_of_occ; i++ )
-		//	fprintf( stderr, "%d\n", Occ[i] );
+		fprintf( stderr, "Occ: %d\n", num_of_occ );
+		for ( int i = 0; i < num_of_occ; i++ )
+			fprintf( stderr, "%d\n", Occ[i] );
 	}
 
   	free ( Occ );
