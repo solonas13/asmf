@@ -12,7 +12,9 @@ For Ubuntu Linux, make sure your are on-line, and install the above via
 Basic Instructions
 ==================
 
-   The shell command `make' should compile this example program. 
+   Make sure you have uncommented the analogous functions of the library
+you would like to test in file `example.cc'. The shell command `make' 
+should compile this example program. 
 
 After compilation the binary `example' will be created in the working 
 directory, e.g. you may call it from this directory via
@@ -22,3 +24,6 @@ directory, e.g. you may call it from this directory via
  $ ./example ./data/text1 ./data/pattern1 1
 
  $ ./example ./data/text2 ./data/pattern2 2
+
+ $ ./example ./data/text3 ./data/pattern2 3
+

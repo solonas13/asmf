@@ -229,16 +229,15 @@ unsigned int fpt_simple ( unsigned char * x, unsigned char * t, unsigned int k, 
 	for( int i = 0; i < k + 1; ++i )
     		free ( P[i] );
 	free ( P );
+  	free ( T );
 
   	free ( F );
   	free ( Pos );
-  	free ( T );
         free ( mf );
         free ( ind );
         free ( dups );
         free ( d_occ );
         free ( l_occ );
-
 
 	return ( 1 );
 }
@@ -249,7 +248,24 @@ unsigned int fpt ( unsigned char * x, unsigned char * t, unsigned int k, unsigne
 	unsigned int n = strlen ( ( char * ) t );
 	unsigned int N = m + n;
 	unsigned char *T;
-	int * F;
+	char ** seqs;
+
+        /* Fragment variables */
+        unsigned int f = k + 1;
+        int   * mf;
+        int   * ind;
+
+        /* Duplicates variables */
+        int     * dups;
+        unsigned int uniq;
+        int     * d_occ;        // d_occ[i] stores the id of the next fragment that is equal to itself a la linked-list manner
+        int     * l_occ;
+
+        /* Occurrences */
+        int matches;
+        int * F;
+        int * Pos;
+
 	int ** P;
   	int * SA;
   	int * invSA;
@@ -274,23 +290,91 @@ unsigned int fpt ( unsigned char * x, unsigned char * t, unsigned int k, unsigne
 
         fprintf( stderr, "Input is read in memory.\n");
 
+	/*F[i] stores the fragment id occuring as the i-th match of it in t*/
+        F  = ( int * ) calloc( ( f * n ) , sizeof( int ) );
+        if( ( F == NULL) )
+        {
+                fprintf( stderr, " Error: Cannot allocate memory.\n" );
+                return ( 0 );
+        }
+
+        /*Pos[i] stores the position that F[i] occurs in t*/
+        Pos  = ( int * ) calloc( ( f * n ) , sizeof( int ) );
+        if( ( Pos == NULL) )
+        {
+                fprintf( stderr, " Error: Cannot allocate memory.\n" );
+                return ( 0 );
+        }
+
+        /* Partition the pattern in fragments */
+        mf  = ( int * ) calloc( ( f ) , sizeof( int ) );
+        ind = ( int * ) calloc( ( f ) , sizeof( int ) );
+        for ( int i = 0; i < f; i ++ )
+                fragments ( i, f, m, mf, ind  );
+
+
+	/* Check whether there exist duplicated fragments */
+        dups  = ( int * ) calloc( ( f ) , sizeof( int ) );
+        uniq = extract_dups ( ( char * ) x, m, f, mf, ind, dups );
+
+        l_occ = ( int * ) calloc( ( f ) , sizeof( int ) );
+        d_occ = ( int * ) calloc( ( f ) , sizeof( int ) );
+        for ( int i = 0; i < f; i++ )
+        {
+                d_occ[i] = -1;
+                l_occ[i] = -1;
+        }
+
+	/* In case there exist duplicated fragmnents */
+        if ( uniq < f )
+        {
+                seqs = ( char ** ) malloc( ( f ) * sizeof( char * ) );
+                for ( int i = 0; i < f; i++ )
+                {
+                        /* Add the fragment once */
+                        if ( dups[i] < 0 )
+                        {
+                                seqs[i] = ( char * ) malloc( ( mf[i] + 1 ) * sizeof( char ) );
+                                memmove ( &seqs[i][0], &x[ ind[i] ], mf[i] );
+                                seqs[i][mf[i]] = '\0';
+                        }
+                        else //add nothing since it is already added 
+                        {
+                                seqs[i] = ( char * ) malloc( ( 1 ) * sizeof( char ) );
+                                seqs[i][0] = '\0';
+
+                                if ( l_occ[ dups[i] ] == -1 )           //if it the first duplicated fragment
+                                        d_occ[ dups[i] ] = i;
+                                else
+                                        d_occ[ l_occ[ dups[i] ] ] = i;
+                                l_occ[ dups[i] ] = i;
+                        }
+                }
+        }
+        else //add all the fragments since there exist no duplicated fragment
+        {
+                seqs = ( char ** ) malloc( ( f ) * sizeof( char * ) );
+                for( int i = 0; i < f; ++i )
+                {
+                        seqs[i] = ( char * ) malloc( ( mf[i] + 1 ) * sizeof( char ) );
+                        memmove ( &seqs[i][0], &x[ ind[i] ], mf[i] );
+                        seqs[i][mf[i]] = '\0';
+                }
+        }
+
+        /* Compute the fragment's occurrences using Aho Corasick Automaton */
+        filtering ( ( char * ) t, n, ( char ** ) seqs, f, &matches, F, Pos );
+
+        for( int i = 0; i < f; ++i )
+                free ( seqs [i] );
+        free ( seqs );	
+
 	P = ( int ** ) calloc( ( k + 1 ) , sizeof( int * ) );
         P[0] = PrefixArray ( T );	
 	for( int i = 1; i < k + 1; ++i )
   		P[i] = ( int * ) calloc( ( N ) , sizeof( int ) );
 
         fprintf(stderr, "Prefix array is computed.\n");
-
-	F  = ( int * ) calloc( ( n ) , sizeof( int ) );
-  	if( ( F == NULL) ) 
-	{
-    		fprintf( stderr, " Error: Cannot allocate memory.\n" );
-    		return ( 0 );
-  	}
-
-	      	fprintf( stderr, "No filtering is used.\n");
-		for ( int i = 0; i < n; i ++ )
-			F[i] = 1;
 
   	/* Compute the suffix array */
   	SA = (int *) malloc((size_t) ( N + 1 ) * sizeof(int));
@@ -342,42 +426,31 @@ unsigned int fpt ( unsigned char * x, unsigned char * t, unsigned int k, unsigne
 
         fprintf(stderr, "LCP is preprocessed for RMQs.\n");
 
-//	#pragma omp parallel for
-	for ( int i = m; i < N - m + 1; i ++ )
-	{
-		if ( F[i - m] )
-		{	
+	/* For i = 0 .. num of matches - 1*/
+        for ( int i = 0; i < matches; i ++ )
+        {
+                int jj = F[i];          	//this is the id of the fragment
+		int ii = Pos[i] + m - ind[jj];	
+
+                do                      //do this for all fragments that are equal to fragment jj
+                {
 			for ( int q = 1; q < k + 1; q ++ )
 			{
-	                        unsigned int mina = min ( i + P[q-1][i] + 1, N - 1 );
-	                        unsigned int minb = min ( P[q-1][i] + 1, N - 1 );
+	                        unsigned int mina = min ( ii + P[q - 1][ii] + 1, N - 1 );
+	                        unsigned int minb = min ( P[q - 1][ii] + 1, N - 1 );
                         	if ( mina == minb ) 
                         	{  
-                               		P[q][i] = min ( minb, m ); 
+                               		P[q][ii] = min ( minb, m ); 
                                 	continue; 
                         	} 
 				unsigned int l = min ( invSA[ mina ], invSA[ minb ] );
 				unsigned int r = max ( invSA[ mina ], invSA[ minb ] );
-				P[q][i]        = min ( minb + LCP[rmq ( l + 1, r ) ], m );
+				P[q][ii]        = min ( minb + LCP[rmq ( l + 1, r ) ], m );
 			}
-			#if 0
-        		for ( int q = 1; q < k + 1; q ++ )
-        		{
-                		int minI = N + 1;
-				for ( int i = 0; i < N; i ++ )
-        			{
-					int delta = i + P[q - 1][i];
-					if ( delta <= N )
-					{
-						do
-							delta++;
-						while ( delta <= n && T[delta - i] == T[delta] );
-					}
-					P[q][i] = min ( delta - i, N - i );
-				}
-                	}
-			#endif
-		}
+
+			jj = d_occ[jj]; //get the next frament that is equal to fragment jj
+
+                } while ( jj != -1 );
 	}
 	fprintf( stderr, "All pattern's occurrences are found.\n" );
 
@@ -409,11 +482,18 @@ unsigned int fpt ( unsigned char * x, unsigned char * t, unsigned int k, unsigne
     		free ( P[i] );
 	free ( P );
 
-  	free ( F );
+  	free ( T );
   	free ( SA );
   	free ( invSA );
   	free ( LCP );
-  	free ( T );
+
+  	free ( F );
+  	free ( Pos );
+        free ( mf );
+        free ( ind );
+        free ( dups );
+        free ( d_occ );
+        free ( l_occ );
 
 
 	return ( 1 );

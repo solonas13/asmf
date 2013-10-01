@@ -190,17 +190,7 @@ int main(int argc, char **argv)
     		exit( EXIT_FAILURE );
   	}
 
-
 	#if 0
-	start = gettime();
-	if ( ! ( fpt_simple ( x, t, k, &Occ, &num_of_occ ) ) )
-	{
-		fprintf(stderr, " Error: fpt_simple() failed.\n" );
-		exit(EXIT_FAILURE);
-	}
-	end = gettime();
-
-	fprintf( stderr, "Elapsed time of fpt_simple: %lf\n", ( end - start ));
 	start = gettime();
 	if ( ! ( acsmf_simple ( x, t, k, &Occ, &num_of_occ ) ) )
 	{
@@ -217,8 +207,26 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	end = gettime();
-
 	fprintf( stderr, "Elapsed time of acsmf: %lf\n", ( end - start ));
+
+	start = gettime();
+	if ( ! ( fpt_simple ( x, t, k, &Occ, &num_of_occ ) ) )
+	{
+		fprintf(stderr, " Error: fpt_simple() failed.\n" );
+		exit(EXIT_FAILURE);
+	}
+	end = gettime();
+	fprintf( stderr, "Elapsed time of fpt_simple: %lf\n", ( end - start ));
+
+	start = gettime();
+	if ( ! ( fpt ( x, t, k, &Occ, &num_of_occ ) ) )
+	{
+		fprintf(stderr, " Error: fpt() failed.\n" );
+		exit(EXIT_FAILURE);
+	}
+	end = gettime();
+	fprintf( stderr, "Elapsed time of fpt: %lf\n", ( end - start ));
+
 	#endif
 
 	fprintf( stderr, "Occ: %d\n", num_of_occ );
