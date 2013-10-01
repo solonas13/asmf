@@ -9,6 +9,8 @@
 # include <fcntl.h>
 #endif
 #include "csm.h"    	// for using the csm call
+#include "sm.h"    	// for using the csm call
+#include "defs.h"    	// for some definitions
 #include "lfs.h"    	// for reading the input ala divsufsort
 
 double gettime( void )
@@ -188,49 +190,40 @@ int main(int argc, char **argv)
     		exit( EXIT_FAILURE );
   	}
 
-	if ( k == 0 )	
+
+	#if 0
+	start = gettime();
+	if ( ! ( fpt_simple ( x, t, k, &Occ, &num_of_occ ) ) )
 	{
-		start = gettime();
-		if ( ! ( ecsmf_simple ( x, t, &Occ, &num_of_occ ) ) )
-		{
-			fprintf(stderr, " Error: csm() failed.\n" );
-			exit(EXIT_FAILURE);
-		}
-        	end = gettime();
-
-		fprintf( stderr, "Elapsed time ecsmf_simple: %lf\n", ( end - start ));
-
-		fprintf( stderr, "Occ: %d\n", num_of_occ );
-		for ( int i = 0; i < num_of_occ; i++ )
-			fprintf( stderr, "%d\n", Occ[i] );
+		fprintf(stderr, " Error: fpt_simple() failed.\n" );
+		exit(EXIT_FAILURE);
 	}
-	else
-	{	
-		#if 0
-		start = gettime();
-		if ( ! ( acsmf_simple ( x, t, k, &Occ, &num_of_occ ) ) )
-		{
-			fprintf(stderr, " Error: csmk() failed.\n" );
-			exit(EXIT_FAILURE);
-		}
-		end = gettime();
-		fprintf( stderr, "Elapsed time of acsmf_simple: %lf\n", ( end - start ));
-		#endif
+	end = gettime();
 
-		start = gettime();
-		if ( ! ( acsmf ( x, t, k, &Occ, &num_of_occ ) ) )
-		{
-			fprintf(stderr, " Error: csmk() failed.\n" );
-			exit(EXIT_FAILURE);
-		}
-		end = gettime();
-
-		fprintf( stderr, "Elapsed time of acsmf: %lf\n", ( end - start ));
-
-		fprintf( stderr, "Occ: %d\n", num_of_occ );
-		for ( int i = 0; i < num_of_occ; i++ )
-			fprintf( stderr, "%d\n", Occ[i] );
+	fprintf( stderr, "Elapsed time of fpt_simple: %lf\n", ( end - start ));
+	start = gettime();
+	if ( ! ( acsmf_simple ( x, t, k, &Occ, &num_of_occ ) ) )
+	{
+		fprintf(stderr, " Error: csmk() failed.\n" );
+		exit(EXIT_FAILURE);
 	}
+	end = gettime();
+	fprintf( stderr, "Elapsed time of acsmf_simple: %lf\n", ( end - start ));
+
+	start = gettime();
+	if ( ! ( acsmf ( x, t, k, &Occ, &num_of_occ ) ) )
+	{
+		fprintf(stderr, " Error: csmk() failed.\n" );
+		exit(EXIT_FAILURE);
+	}
+	end = gettime();
+
+	fprintf( stderr, "Elapsed time of acsmf: %lf\n", ( end - start ));
+	#endif
+
+	fprintf( stderr, "Occ: %d\n", num_of_occ );
+	for ( int i = 0; i < num_of_occ; i++ )
+		fprintf( stderr, "%d\n", Occ[i] );
 
   	free ( Occ );
   	free ( t );

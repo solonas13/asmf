@@ -8,9 +8,9 @@ LFLAGS= -I $(HOME)/sdsl/include -L $(HOME)/sdsl/lib -lsdsl -ldivsufsort -ldivsuf
  
 EXE=    example
  
-SRC=    example.cc csm.cc lcp.cc aca.cc
+SRC=    example.cc sm.cc csm.cc lcp.cc aca.cc filter.cc
  
-HD=     lfs.h csm.h lcp.h aca.h Makefile
+HD=     lfs.h sm.h csm.h lcp.h aca.h filter.h Makefile
  
 # 
 # No need to edit below this line 
