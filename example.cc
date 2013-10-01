@@ -9,7 +9,7 @@
 # include <fcntl.h>
 #endif
 #include "csm.h"    	// for using the csm call
-#include "sm.h"    	// for using the csm call
+#include "sm.h"    	// for using the sm call
 #include "defs.h"    	// for some definitions
 #include "lfs.h"    	// for reading the input ala divsufsort
 
