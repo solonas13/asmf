@@ -183,6 +183,7 @@ int main(int argc, char **argv)
 	n--;
 	m--;
 
+	/* You may change the ALLOC_SIZE definition in file defs.h --- it is resized automatically anyway */
   	Occ = ( unsigned int * ) realloc ( Occ,   ( ALLOC_SIZE ) * sizeof ( unsigned int ) );
   	if( ( Occ == NULL) ) 
 	{

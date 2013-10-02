@@ -59,7 +59,6 @@ unsigned int acsmf ( unsigned char * x, unsigned char * t, unsigned int k, unsig
 	int * P;
 	int * M;
 	int * mis;
-	unsigned int max_alloc = m;
 
 	if ( m > n ) 
 	{
@@ -405,6 +404,7 @@ unsigned int acsmf ( unsigned char * x, unsigned char * t, unsigned int k, unsig
 		} while ( jj != -1 );
 	}
 
+	unsigned int max_alloc = ALLOC_SIZE;
 	for ( int i = 0; i <= n - m + 1; i++ )
 	{
 		if ( ( * num_of_occ ) >= max_alloc )
@@ -476,7 +476,6 @@ unsigned int acsmf_simple ( unsigned char * x, unsigned char * t, unsigned int k
 	int * P;
 	int * M;
 	int * mis;
-	unsigned int max_alloc = m;
 
 	if ( m > n ) 
 	{
@@ -729,6 +728,7 @@ unsigned int acsmf_simple ( unsigned char * x, unsigned char * t, unsigned int k
 		} while ( jj != -1 );
 	}
 
+	unsigned int max_alloc = ALLOC_SIZE;
 	for ( int i = 0; i <= n - m + 1; i++ )
 	{
 		if ( ( * num_of_occ ) >= max_alloc )

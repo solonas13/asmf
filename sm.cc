@@ -454,7 +454,6 @@ unsigned int fpt ( unsigned char * x, unsigned char * t, unsigned int k, unsigne
 	}
 	fprintf( stderr, "All pattern's occurrences are found.\n" );
 
-	#if 1
 	unsigned int max_alloc = ALLOC_SIZE;
 	for ( int i = m; i < N - m + 1; i ++ )
 	{
@@ -469,7 +468,6 @@ unsigned int fpt ( unsigned char * x, unsigned char * t, unsigned int k, unsigne
 			( * num_of_occ ) = ( * num_of_occ ) + 1;
 		}
 	}
-	#endif
 
 	if ( ( * num_of_occ ) > 0  )
 	{
