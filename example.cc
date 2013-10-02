@@ -194,7 +194,7 @@ int main(int argc, char **argv)
 	start = gettime();
 	if ( ! ( acsmf_simple ( x, t, k, &Occ, &num_of_occ ) ) )
 	{
-		fprintf(stderr, " Error: csmk() failed.\n" );
+		fprintf(stderr, " Error: acsmf_simple() failed.\n" );
 		exit(EXIT_FAILURE);
 	}
 	end = gettime();
@@ -203,7 +203,7 @@ int main(int argc, char **argv)
 	start = gettime();
 	if ( ! ( acsmf ( x, t, k, &Occ, &num_of_occ ) ) )
 	{
-		fprintf(stderr, " Error: csmk() failed.\n" );
+		fprintf(stderr, " Error: acsmf() failed.\n" );
 		exit(EXIT_FAILURE);
 	}
 	end = gettime();
@@ -226,7 +226,6 @@ int main(int argc, char **argv)
 	}
 	end = gettime();
 	fprintf( stderr, "Elapsed time of fpt: %lf\n", ( end - start ));
-
 	#endif
 
 	fprintf( stderr, "Occ: %d\n", num_of_occ );
