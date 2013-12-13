@@ -813,8 +813,7 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
 	
 	if ( block_size > n ) 
 	{
-		fprintf( stderr, " Error: Invalid length of block size.\n" );
-    		return ( 0 );
+		block_size = n;
 	}
 
   	xx = ( unsigned char * ) malloc( ( size_t ) ( mm + 1 ) * sizeof( unsigned char ) );
