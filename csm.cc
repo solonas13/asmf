@@ -811,9 +811,9 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
     		return ( 0 );
 	}
 	
-	if ( block_size > n ) 
+	if ( block_size > n - m + 1 ) 
 	{
-		block_size = n;
+		block_size = n - m + 1 ;
 	}
 
   	xx = ( unsigned char * ) malloc( ( size_t ) ( mm + 1 ) * sizeof( unsigned char ) );
@@ -895,7 +895,7 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
 		unsigned int txt_index = b * b_size;
 
 		/* This is the last block */
-		if ( b == nb_blocks - 1 )
+		if ( b == nb_blocks - 1 && mod_size > 0 )
 		{
 			b_size = mod_size;
 			if  ( b_size < m ) //if the block size is less than the pattern length break.
