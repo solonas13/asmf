@@ -191,6 +191,16 @@ int main(int argc, char **argv)
     		exit( EXIT_FAILURE );
   	}
 
+	start = gettime();
+        int block_size = 1048576; //1Mb block will be used
+	if ( ! ( acsmf_simple_ms ( x, t, k, &Occ, &num_of_occ, block_size ) ) )
+	{
+		fprintf(stderr, " Error: acsmf_simple_ms() failed.\n" );
+		exit(EXIT_FAILURE);
+	}
+	end = gettime();
+	fprintf( stderr, "Elapsed time of acsmf_simple_ms: %lf\n", ( end - start ));
+
 	#if 0
 	start = gettime();
 	if ( ! ( acsmf_simple ( x, t, k, &Occ, &num_of_occ ) ) )
