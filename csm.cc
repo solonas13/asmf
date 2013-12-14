@@ -812,9 +812,7 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
 	}
 	
 	if ( block_size > n - m + 1 ) 
-	{
 		block_size = n - m + 1 ;
-	}
 
   	xx = ( unsigned char * ) malloc( ( size_t ) ( mm + 1 ) * sizeof( unsigned char ) );
   	if( ( xx == NULL) ) 
@@ -883,28 +881,24 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
 	}
 
 	
-	/* Here we have to split the text into blocks */
-	unsigned int b_size = block_size;
-	unsigned int nb_blocks = ceil ( ( double ) n / b_size );
-	unsigned int mod_size = n % b_size; //this is the occ_size of the last block
+	/* Here we have to split the text into non-overlapping blocks */
+	unsigned int occ_size = block_size;	//this is the potential number of occurrences of each block
+	unsigned int nb_blocks = ceil ( ( double ) n / occ_size );
+	unsigned int mod_occ_size = n % occ_size;     //this is the occ_size of the last block
 
 	for ( int b = 0; b < nb_blocks; b++ )
 	{
-		unsigned int txt_size = b_size + m - 1; // we add ( m - 1 ) as this is the last possible occurrence starting at position T[mm + b_size].
-		unsigned int occ_size = b_size;
-		unsigned int txt_index = b * b_size;
+		unsigned int txt_size = occ_size + m - 1; // we add ( m - 1 ) as this is the text
+		unsigned int txt_index = b * occ_size;
 
 		/* This is the last block */
-		if ( b == nb_blocks - 1 && mod_size > 0 )
+		if ( nb_blocks > 1 && b == nb_blocks )
 		{
-			b_size = mod_size;
-			if  ( b_size < m ) //if the block size is less than the pattern length break.
+			occ_size = mod_occ_size;
+			if  ( occ_size < m ) //if the block size is less than the pattern length break.
 				break;
 			else
-			{
-				txt_size = mod_size;
-				occ_size = mod_size - m + 1;
-			}
+				txt_size = occ_size + m - 1;
 		}
 
 		unsigned char * txt;
