@@ -19,4 +19,4 @@ The following functions for approximate circular string matching with k-mismatch
 	unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned int k, unsigned int ** Occ, unsigned int * num_of_occ, unsigned int block_size );
 
 
-All functions take as input parameters the pattern x, the text t, and the integer threshold; and then return the starting positions of the occurrences of the rotations of x in t with k-mismatches as output. Functions ending with `ms' take an additional parameter block_size which specifies the length of the non-overlapping fragments into which the text is split. This is useful in the case when the text is too large to fit in memory.
+All functions take as input parameters the pattern x, the text t, and an integer threshold k; and then return the starting positions of the occurrences of the rotations of x in t with k-mismatches as output. Functions ending with `ms' take an additional parameter block_size which specifies the length of the non-overlapping fragments into which the text is split. This is useful in the case when the text is too large to fit in memory.
