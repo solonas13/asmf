@@ -824,6 +824,7 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
         memmove ( &xx[0], x, m );
         memmove ( &xx[m], x, m - 1 );
         xx[mm] = '\0';
+    	
 
 	/* Partition the pattern in fragments */
         mf  = ( int * ) calloc( ( f ) , sizeof( int ) );
@@ -892,7 +893,7 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
 		unsigned int txt_index = b * occ_size;
 
 		/* This is the last block */
-		if ( nb_blocks > 1 && b == nb_blocks )
+		if ( nb_blocks > 1 && b == nb_blocks - 1 )
 		{
 			occ_size = mod_occ_size;
 			if  ( occ_size < m ) //if the block size is less than the pattern length break.
@@ -923,6 +924,7 @@ unsigned int acsmf_simple_ms ( unsigned char * x, unsigned char * t, unsigned in
         	memmove ( &T[0], xx, mm );
         	memmove ( &T[mm], txt, txt_size ); 
         	T[N] = '\0';
+		
 
   		txx = ( unsigned char * ) malloc( ( size_t ) ( N + 1 ) * sizeof( unsigned char ) );
   		if( ( txx == NULL) ) 

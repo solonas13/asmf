@@ -154,7 +154,7 @@ unsigned int fpt_simple_ms ( unsigned char * x, unsigned char * t, unsigned int 
                 unsigned int txt_index = b * occ_size;
 
                 /* This is the last block */
-                if ( nb_blocks > 1 && b == nb_blocks )
+                if ( nb_blocks > 1 && b == nb_blocks + 1 )
                 {
                         occ_size = mod_occ_size;
                         if  ( occ_size < m ) //if the block size is less than the pattern length break.
