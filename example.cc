@@ -220,6 +220,7 @@ int main(int argc, char **argv)
 	end = gettime();
 	fprintf( stderr, "Elapsed time of acsmf: %lf\n", ( end - start ));
 
+
 	start = gettime();
         int block_size = 5; // block will be used
 	if ( ! ( fpt_simple_ms ( x, t, k, &Occ, &num_of_occ, block_size ) ) )

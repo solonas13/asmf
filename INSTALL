@@ -12,7 +12,7 @@ For Ubuntu Linux, make sure your are on-line, and install the above via
 Basic Instructions
 ==================
 
-   Make sure you have uncommented the analogous functions of the library
+   Make sure you have uncommented the analogous function of the library
 you would like to test in file `example.cc'. The shell command `make' 
 should compile this example program. 
 
