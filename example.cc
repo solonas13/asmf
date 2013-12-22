@@ -199,9 +199,9 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	end = gettime();
+	fprintf( stderr, "Elapsed time of acsmf_simple_ms: %lf\n", ( end - start ));
 
 	#if 0
-	fprintf( stderr, "Elapsed time of acsmf_simple_ms: %lf\n", ( end - start ));
 	start = gettime();
 	if ( ! ( acsmf_simple ( x, t, k, &Occ, &num_of_occ ) ) )
 	{
